@@ -1,0 +1,131 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "test@example.com",
+      "password": "$2b$10$SN/r3q.sLLqLJjSQPCrYu.9b1z9d1cZzqZKPvODFd3mGFw1K6YRVW",
+      "name": "Test User",
+      "createdAt": "2024-02-25T00:00:00Z",
+      "habits": [
+        {
+          "id": 1,
+          "name": "Ejercicio Matutino",
+          "description": "30 minutos de ejercicio cada mañana",
+          "color": "#7c3aed",
+          "createdAt": "2024-02-25T00:00:00Z",
+          "streak": 3,
+          "lastCompletedDate": "2024-02-25",
+          "completedDates": [
+            "2024-02-23",
+            "2024-02-24",
+            "2024-02-25"
+          ],
+          "rewardWheelTriggered": false,
+          "rewards": [
+            {
+              "id": 1,
+              "name": "Helado",
+              "icon": "🍦"
+            },
+            {
+              "id": 2,
+              "name": "Película",
+              "icon": "🎬"
+            },
+            {
+              "id": 3,
+              "name": "Compra",
+              "icon": "🛍️"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "email": "kebt19@hotmail.com",
+      "password": "2736e06cfcb0968d4d044e100dfc88b71f31a9b5bc3854638f04cc61e269b8a9",
+      "name": "kleyberth",
+      "createdAt": "2026-02-25T14:35:14.551Z",
+      "habits": [
+        {
+          "id": 1,
+          "name": "Gym",
+          "description": "ir al Gym a las 8:00 am",
+          "color": "#ec4899",
+          "rewards": [
+            {
+              "id": 1,
+              "name": "Helado",
+              "icon": "🍦"
+            },
+            {
+              "id": 2,
+              "name": "Jueguito",
+              "icon": "🎮"
+            },
+            {
+              "id": 3,
+              "name": "Pelicula",
+              "icon": "🎬"
+            },
+            {
+              "id": 4,
+              "name": "Shopping",
+              "icon": "🛍️"
+            }
+          ],
+          "createdAt": "2026-02-25T14:37:48.045Z",
+          "streak": 0,
+          "lastCompletedDate": "2026-02-24",
+          "completedDates": [
+            "2026-02-19",
+            "2026-02-20",
+            "2026-02-21",
+            "2026-02-22",
+            "2026-02-23",
+            "2026-02-24",
+            "2026-02-25"
+          ],
+          "rewardWheelTriggered": false
+        },
+        {
+          "id": 2,
+          "name": "lectura",
+          "description": "nose",
+          "color": "#10b981",
+          "rewards": [
+            {
+              "id": 1,
+              "name": "Helado",
+              "icon": "🍦"
+            },
+            {
+              "id": 2,
+              "name": "peli",
+              "icon": "🎬"
+            },
+            {
+              "id": 3,
+              "name": "juego",
+              "icon": "🎮"
+            }
+          ],
+          "createdAt": "2026-02-25T14:44:14.517Z",
+          "streak": 7,
+          "lastCompletedDate": "2026-02-25",
+          "completedDates": [
+            "2026-02-19",
+            "2026-02-20",
+            "2026-02-21",
+            "2026-02-22",
+            "2026-02-23",
+            "2026-02-24",
+            "2026-02-25"
+          ],
+          "rewardWheelTriggered": true
+        }
+      ]
+    }
+  ]
+}
