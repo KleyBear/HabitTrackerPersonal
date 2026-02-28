@@ -1,27 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecking, setIsChecking] = useState(true); // Nuevo: para validar sesión inicial
   const router = useRouter();
+
+  // VALIDACIÓN DE SESIÓN EXISTENTE
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    const user = localStorage.getItem('currentUser');
+
+    if (token && user) {
+      // Si ya hay sesión, saltamos el login
+      router.replace('/dashboard');
+    } else {
+      // Si no hay sesión, cargamos el email recordado si existe
+      const savedEmail = localStorage.getItem('rememberedEmail');
+      if (savedEmail) {
+        setFormData(prev => ({ ...prev, email: savedEmail }));
+        setRememberMe(true);
+      }
+      setIsChecking(false); // Mostramos el formulario
+    }
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -38,9 +57,7 @@ export default function LoginPage() {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
@@ -51,38 +68,52 @@ export default function LoginPage() {
 
       if (!response.ok) {
         setError(data.message || 'Error al iniciar sesión');
+        setIsLoading(false);
         return;
       }
 
+      // Lógica de "Recordar Usuario" (Email)
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', formData.email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
+      // GUARDAR SESIÓN (Esto es lo que permite el auto-login después)
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('currentUser', JSON.stringify(data.user));
       
       router.push('/dashboard');
     } catch (err) {
       setError('Error de conexión. Intenta de nuevo.');
-    } finally {
       setIsLoading(false);
     }
   };
+
+  // Mientras verifica si hay sesión, no mostramos nada o un spinner
+  if (isChecking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-pulse text-primary font-medium">Cargando sesión...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <Card className="w-full max-w-md border border-border">
         <div className="p-8">
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-primary mb-2">Iniciar Sesión</h1>
             <p className="text-muted-foreground">Bienvenido de vuelta</p>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="mb-4 p-4 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive text-sm">
               {error}
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">Email</label>
@@ -110,6 +141,17 @@ export default function LoginPage() {
               />
             </div>
 
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="remember"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+              />
+              <label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer select-none">
+                Mantener sesión iniciada
+              </label>
+            </div>
+
             <Button
               type="submit"
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -119,11 +161,10 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Footer */}
           <p className="text-center text-sm text-muted-foreground mt-6">
             ¿No tienes cuenta?{' '}
             <Link href="/register" className="text-primary hover:underline font-medium">
-              Registrate
+              Regístrate
             </Link>
           </p>
         </div>
